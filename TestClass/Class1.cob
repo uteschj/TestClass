@@ -16,7 +16,6 @@
                Assign to hID
                Organization is relative access mode is dynamic
                relative key is hRelkey  file status is hStatus.
-      *        Lock mode is MANUAL with lock on MULTIPLE RECORDS.
                
        
        DATA DIVISION.
