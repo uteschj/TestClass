@@ -4,7 +4,7 @@
        CONFIGURATION SECTION.
        SPECIAL-NAMES.
        REPOSITORY.
-           CLASS CLASS-STRING AS "System.String"
+           CLASS CLASS-STRING AS "System.String"           
            .
        OBJECT.
        
@@ -33,20 +33,23 @@
        01  hOpenSW          pic 9 comp-5 value zero.     
          
        PROCEDURE DIVISION.
+       
+       METHOD-ID. NEW.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       LINKAGE SECTION.
+       01  historyFile          OBJECT REFERENCE CLASS-STRING.
       
+       PROCEDURE DIVISION USING BY VALUE historyFile.
+           SET hID to historyFile
+       END METHOD NEW.
+       
+       
        METHOD-ID. READHISTORY AS "ReadHistory".
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       01  wChar            pic x value space.
        01  WS-EOF           pic A(1).
-       
-       LINKAGE SECTION.
-       01  ret                  OBJECT REFERENCE CLASS-STRING.
-       01  historyFile          OBJECT REFERENCE CLASS-STRING.
-      
-       PROCEDURE DIVISION USING BY VALUE historyFile  RETURNING ret.
-           SET hID to historyFile
-           set ret to "finished"    
+       PROCEDURE DIVISION.  
            if hOpenSW = ZERO
                open input HistFile
                move 1 to hOpenSW
@@ -62,25 +65,22 @@
            PERFORM until WS-EOF = "Y"   
                READ HistFile next record at end 
                    MOVE "Y" to WS-EOF
-      *                CLOSE HistFile
+                       CLOSE HistFile
                        exit method
                END-READ
            END-PERFORM
        END METHOD READHISTORY.
        
+       
+       
        METHOD-ID. CREATEHISTORY AS "CreateHistory".
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       01  wChar            pic x value space.
        01  WS-EOF           pic A(1).
-       
-       LINKAGE SECTION.
-       01  historyFile          OBJECT REFERENCE CLASS-STRING.
-      
-       PROCEDURE DIVISION USING BY VALUE historyFile.
-           SET hID to historyFile
+       PROCEDURE DIVISION.
            if hOpenSW = ZERO
                open output HistFile
+               move 1 to hOpenSW
            END-IF
            move zero to hrelkey
            perform until hRelkey = 10000000
@@ -99,7 +99,6 @@
                write histRec
                end-write
            END-PERFORM.
-      
            close HistFile
            move zero to hOpenSW         
        END METHOD CREATEHISTORY.

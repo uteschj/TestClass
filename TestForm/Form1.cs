@@ -40,35 +40,39 @@ namespace TestForm
         }
         private void RunThreadedTest()
         {
-
-            Thread Thread1 = new System.Threading.Thread(delegate () {
-                //Your code here
-                Stopwatch stopWatch = new Stopwatch();
-                stopWatch.Start();
-                TestClass.Class1 class1 = new TestClass.Class1();
-                var returnstring = class1.ReadHistory("trs1.h10");
-                class1 = null;
-                stopWatch.Stop();
-                MessageBox.Show("Thread1 " + stopWatch.Elapsed);
-                stopWatch = null;
-            });
-            Thread1.Start();
+            dispatch9006("trs1.h10");
+            dispatch9006("trs2.h10");
 
 
-            Thread Thread2 = new System.Threading.Thread(delegate () {
-                //Your code here
-                Stopwatch stopWatch = new Stopwatch();
-                stopWatch.Start();
-                TestClass.Class1 class1 = new TestClass.Class1();
-                var returnstring = class1.ReadHistory("trs2.h10");
-                class1 = null;
-                stopWatch.Stop();
-                MessageBox.Show("Thread2 " + stopWatch.Elapsed);
-                stopWatch = null;
-            });
-            Thread2.Start();
 
-            Thread2.Join();
+            //Thread Thread1 = new System.Threading.Thread(delegate () {
+            //    //Your code here
+            //    Stopwatch stopWatch = new Stopwatch();
+            //    stopWatch.Start();
+            //    TestClass.Class1 class1 = new TestClass.Class1();
+            //    //var returnstring = class1.ReadHistory("trs1.h10");
+            //    class1 = null;
+            //    stopWatch.Stop();
+            //    MessageBox.Show("Thread1 " + stopWatch.Elapsed);
+            //    stopWatch = null;
+            //});
+            //Thread1.Start();
+
+
+            //Thread Thread2 = new System.Threading.Thread(delegate () {
+            //    //Your code here
+            //    Stopwatch stopWatch = new Stopwatch();
+            //    stopWatch.Start();
+            //    TestClass.Class1 class1 = new TestClass.Class1();
+            //    //var returnstring = class1.ReadHistory("trs2.h10");
+            //    class1 = null;
+            //    stopWatch.Stop();
+            //    MessageBox.Show("Thread2 " + stopWatch.Elapsed);
+            //    stopWatch = null;
+            //});
+            //Thread2.Start();
+
+            //Thread2.Join();
         }
 
         private void RunTaskTest()
@@ -77,8 +81,8 @@ namespace TestForm
             {
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
-                TestClass.Class1 class1 = new TestClass.Class1();
-                var returnstring = class1.ReadHistory("trs1.h10");
+                TestClass.Class1 class1 = new TestClass.Class1("trs1.h10");
+                class1.ReadHistory();
                 class1 = null;
                 stopWatch.Stop();
                 MessageBox.Show("Task1 " + stopWatch.Elapsed);
@@ -88,8 +92,8 @@ namespace TestForm
             {
                 Stopwatch stopWatch = new Stopwatch();
                 stopWatch.Start();
-                TestClass.Class1 class2 = new TestClass.Class1();
-                var returnstring = class2.ReadHistory("trs2.h10");
+                TestClass.Class1 class2 = new TestClass.Class1("trs2.h10");
+                class2.ReadHistory();
                 class2 = null;
                 stopWatch.Stop();
                 MessageBox.Show("Task2 " + stopWatch.Elapsed);
@@ -100,8 +104,8 @@ namespace TestForm
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            TestClass.Class1 class1 = new TestClass.Class1();
-            var returnstring = class1.ReadHistory("trs1.h10");
+            TestClass.Class1 class1 = new TestClass.Class1("trs1.h10");
+            class1.ReadHistory();
             class1 = null;
             stopWatch.Stop();
             MessageBox.Show("Test " + stopWatch.Elapsed);
@@ -120,8 +124,8 @@ namespace TestForm
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            TestClass.Class1 class1 = new TestClass.Class1();
-            class1.CreateHistory("trs1.h10");
+            TestClass.Class1 class1 = new TestClass.Class1("trs1.h10");
+            class1.CreateHistory();
             class1 = null;
             stopWatch.Stop();
             MessageBox.Show("Created History File in " + stopWatch.Elapsed);
@@ -129,7 +133,15 @@ namespace TestForm
 
         }
 
-        
+        private static void dispatch9006(string JobID)
+        {
+            Console.WriteLine("dispatch9006 Starting...");
+            TestClass.Class1 tws = new TestClass.Class1(JobID);
+            Thread t = new Thread(new ThreadStart(tws.ReadHistory));
+            t.Name = JobID;
+            t.Start();
+            Console.WriteLine("Started threadid " + t.Name);
+        }
 
 
     }
