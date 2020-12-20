@@ -49,8 +49,8 @@ namespace TestForm
             //    //Your code here
             //    Stopwatch stopWatch = new Stopwatch();
             //    stopWatch.Start();
-            //    TestClass.Class1 class1 = new TestClass.Class1();
-            //    //var returnstring = class1.ReadHistory("trs1.h10");
+            //    TestClass.Class1 class1 = new TestClass.Class1("trs1.h10");
+            //    class1.ReadHistory();
             //    class1 = null;
             //    stopWatch.Stop();
             //    MessageBox.Show("Thread1 " + stopWatch.Elapsed);
@@ -63,8 +63,8 @@ namespace TestForm
             //    //Your code here
             //    Stopwatch stopWatch = new Stopwatch();
             //    stopWatch.Start();
-            //    TestClass.Class1 class1 = new TestClass.Class1();
-            //    //var returnstring = class1.ReadHistory("trs2.h10");
+            //    TestClass.Class1 class1 = new TestClass.Class1("trs2.h10");
+            //    class1.ReadHistory();
             //    class1 = null;
             //    stopWatch.Stop();
             //    MessageBox.Show("Thread2 " + stopWatch.Elapsed);
@@ -72,7 +72,7 @@ namespace TestForm
             //});
             //Thread2.Start();
 
-            //Thread2.Join();
+
         }
 
         private void RunTaskTest()
@@ -136,8 +136,19 @@ namespace TestForm
         private static void dispatch9006(string JobID)
         {
             Console.WriteLine("dispatch9006 Starting...");
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
             TestClass.Class1 tws = new TestClass.Class1(JobID);
-            Thread t = new Thread(new ThreadStart(tws.ReadHistory));
+
+            ThreadStart starter  = new ThreadStart(tws.ReadHistory);
+            //callback to display timer
+            starter += () => {
+                stopWatch.Stop();
+                MessageBox.Show("Test " + JobID + " " + stopWatch.Elapsed);
+                stopWatch = null;
+            };
+
+            Thread t = new Thread(starter);
             t.Name = JobID;
             t.Start();
             Console.WriteLine("Started threadid " + t.Name);

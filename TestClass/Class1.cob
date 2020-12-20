@@ -27,10 +27,10 @@
        
        WORKING-STORAGE SECTION.
        
-       01  hRelkey          PIC 9(8) COMP-5.
+       01  hRelkey          PIC 9(8).
        01  hStatus          pic 9(2) value zero.
        01  hID              pic x(255) value space.
-       01  hOpenSW          pic 9 comp-5 value zero.     
+       01  hOpenSW          pic 9 value zero.     
          
        PROCEDURE DIVISION.
        
